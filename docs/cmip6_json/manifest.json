@@ -1,0 +1,122 @@
+{
+  "variables": {
+    "tas": {
+      "unit": "degC",
+      "files": {
+        "ssp126": {
+          "path": "tas_ssp126.json",
+          "n_cells": 13824,
+          "year_range": [
+            2015,
+            2100
+          ]
+        },
+        "ssp245": {
+          "path": "tas_ssp245.json",
+          "n_cells": 13824,
+          "year_range": [
+            2015,
+            2100
+          ]
+        },
+        "ssp370": {
+          "path": "tas_ssp370.json",
+          "n_cells": 13824,
+          "year_range": [
+            2015,
+            2100
+          ]
+        },
+        "ssp585": {
+          "path": "tas_ssp585.json",
+          "n_cells": 13824,
+          "year_range": [
+            2015,
+            2100
+          ]
+        }
+      }
+    },
+    "lai": {
+      "unit": "m2_m-2",
+      "files": {
+        "ssp126": {
+          "path": "lai_ssp126.json",
+          "n_cells": 5258,
+          "year_range": [
+            2015,
+            2100
+          ]
+        },
+        "ssp245": {
+          "path": "lai_ssp245.json",
+          "n_cells": 5258,
+          "year_range": [
+            2015,
+            2100
+          ]
+        },
+        "ssp370": {
+          "path": "lai_ssp370.json",
+          "n_cells": 5258,
+          "year_range": [
+            2015,
+            2100
+          ]
+        },
+        "ssp585": {
+          "path": "lai_ssp585.json",
+          "n_cells": 5258,
+          "year_range": [
+            2015,
+            2100
+          ]
+        }
+      }
+    },
+    "zos": {
+      "unit": "cm",
+      "files": {
+        "ssp126": {
+          "path": "zos_ssp126.json",
+          "n_cells": 21497,
+          "year_range": [
+            2015,
+            2100
+          ]
+        },
+        "ssp245": {
+          "path": "zos_ssp245.json",
+          "n_cells": 21497,
+          "year_range": [
+            2015,
+            2100
+          ]
+        },
+        "ssp370": {
+          "path": "zos_ssp370.json",
+          "n_cells": 21497,
+          "year_range": [
+            2015,
+            2100
+          ]
+        },
+        "ssp585": {
+          "path": "zos_ssp585.json",
+          "n_cells": 21497,
+          "year_range": [
+            2015,
+            2100
+          ]
+        }
+      }
+    }
+  },
+  "ssps": [
+    "ssp126",
+    "ssp245",
+    "ssp370",
+    "ssp585"
+  ],
+  "stride": 2
+}
