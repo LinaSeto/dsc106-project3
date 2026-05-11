@@ -558,7 +558,7 @@ function drawMap(selector, data, year, color) {
 
     // Update title
     svg.select('text.title')
-        .text(`${data.variable} — ${data.ssp} — ${year} — ${data.unit}`);
+        .text(`${year}`);
 }
 
 
