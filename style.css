@@ -31,7 +31,7 @@ body {
 .legend {
     flex: 0 0 70px;
     min-width: 70px;
-    margin: 0 auto; 
+
     font-family: inherit;
 }
 
@@ -49,29 +49,29 @@ body {
 }
 
 .factors {
-    padding: 0;
     border: 2px solid #919191;  
-    border-radius: 8px;       
-    padding: 15px;            
+    border-radius: 6px;       
+    padding: 0px;            
     background-color: #fff;   
     display: flex;   
-    gap: 3px;               
+    gap: 0px;               
     box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
-    margin: 1px;
+    margin: 0px;
     justify-content: center;
 }
 
 .factors legend {
     font-weight: bold;
     padding: 0;
-    margin-right: 12px; 
+    margin-right: 0px; 
     float: left;
 }
 
 .factors label {
-     margin-right: 20px; 
+    margin-right: 0px; 
     cursor: pointer;
     user-select: none;
+    font-size: 14px ;
 }
 
 .factors input[type="radio"] {
@@ -334,28 +334,58 @@ body {
     width: 100%;
     height: 100%; 
     background-color: #f9f9f9;
+<<<<<<< Updated upstream
     border: 1px solid #ddd; 
 }
+=======
+    border: 1px solid #ddd; }
+>>>>>>> Stashed changes
 
 /* Styling the slider row inside the box */
 .year-slider-row {
     display: flex;
     align-items: center;
     gap: 10px;
+<<<<<<< Updated upstream
     margin-top: auto;
+=======
+    margin-top: auto; 
+>>>>>>> Stashed changes
     padding-top: 10px;
     color: #3d3d3d;
     font-weight: bold;
 }
-
+/* 7e57c2
+26a69a */
 .year-slider {
     flex-grow: 1; 
+<<<<<<< Updated upstream
+=======
+    accent-color: #7e57c2
+>>>>>>> Stashed changes
 }
 
+/* Left Map Slider */
+#view-left .year-slider {
+    accent-color: #7e57c2;
+}
+
+/* Right Map Slider */
+ .year-slider {
+    accent-color: #26a69a;
+}
+
+
 .ssp-select {
+<<<<<<< Updated upstream
     max-width: fit-content; 
     font-size: 12px;
     padding: 2px 1px; 
+=======
+    max-width: fit-content;  
+    font-size: 12px;
+    padding: 2px 1px;    
+>>>>>>> Stashed changes
     border: 1px solid #999;
     border-radius: 4px;
     background: white;
@@ -394,6 +424,7 @@ body {
     width: 100%; 
 }
 
+<<<<<<< Updated upstream
 /* trend chart */
 #trend-chart {
     width: 100%;
@@ -410,3 +441,90 @@ body {
     height: 200px;
     display: block;
 }
+=======
+.factors {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 15px;
+    border: 2px solid #333;
+    border-radius: 8px;
+    padding: 15px;
+    background-color: #fff;
+    margin-inline: auto;
+}
+
+.factors-title {
+    font-weight: bold;
+    margin-right: 10px;
+    display: block; 
+    font-size: 14px ;
+}
+
+
+/* fro chrome  */
+.year-slider[data-side="left"] {
+    accent-color: #7e57c2;
+}
+
+.year-slider[data-side="right"] {
+    accent-color: #26a69a;
+}
+
+
+.year-slider[data-side="left"]::-webkit-slider-thumb {
+    background: #7e57c2;
+}
+
+.year-slider[data-side="right"]::-webkit-slider-thumb {
+    background: #26a69a;
+}
+
+/*  Firefox */
+.year-slider[data-side="left"]::-moz-range-thumb {
+    background: #7e57c2;
+}
+
+.year-slider[data-side="right"]::-moz-range-thumb {
+    background: #26a69a;
+}
+
+
+/* SAFARI */
+@supports (-webkit-hyphens:none) {
+    .year-slider {
+        -webkit-appearance: none;
+        background: transparent;
+    }
+
+    /* Track (The bar) */
+    .year-slider::-webkit-slider-runnable-track {
+        height: 8px;
+        background: #e0e0e0;
+        border-radius: 4px;
+    }
+
+    /* Thumb (The knob) - Left */
+    .year-slider[data-side="left"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        height: 17px;
+        width: 17px;
+        background: #7e57c2;
+        margin-top: -5px; /* Centers thumb on track */
+        border-radius: 100px;
+    }
+
+    /* Thumb (The knob) - Right */
+    .year-slider[data-side="right"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        height: 17px;
+        width: 17px;
+        background: #26a69a;
+        margin-top: -5px;
+        border-radius: 10px;
+    }
+}
+
+>>>>>>> Stashed changes
