@@ -410,26 +410,28 @@ function updateMarkersAndInfo() {
     if (!leftData || !rightData) return;
 
     for (const selector of ['#map-left', '#map-right']) {
-        const overlay = d3.select(selector).select('svg.marker-svg');
-        if (overlay.empty()) continue;
-
-        overlay.selectAll('circle.marker').remove();
+        // Wipe ANY existing markers in this map's container, wherever they are
+        d3.select(selector).selectAll('circle.marker').remove();
 
         if (state.clickedPoint) {
             const mainSvg = d3.select(selector).select('svg.main-svg').node();
+            const overlay = d3.select(selector).select('svg.marker-svg');
+            if (!mainSvg || overlay.empty()) continue;
+
             const t = d3.zoomTransform(mainSvg);
             const [px, py] = PROJECTION([state.clickedPoint.lon, state.clickedPoint.lat]);
 
             overlay.append('circle')
                 .attr('class', 'marker')
-                .attr('r', 5)                       // constant radius
-                .attr('cx', t.applyX(px))           // apply current zoom transform
+                .attr('r', 5)
+                .attr('cx', t.applyX(px))
                 .attr('cy', t.applyY(py));
         }
     }
 
     drawInfoPanel(state.clickedPoint, leftData, rightData);
 }
+
 
 // ---------- Render: called whenever state changes ----------
 async function render() {
@@ -456,7 +458,7 @@ function drawMap(selector, data, year, color) {
     const yearIdx = yearIndexes.get(key).get(year);
 
     // First-time SVG skeleton
-    let svg = container.select('svg');
+    let svg = container.select('svg.main-svg');
     if (svg.empty()) {
         container.style('position', 'relative');
 
@@ -465,9 +467,9 @@ function drawMap(selector, data, year, color) {
             .attr('viewBox', `0 0 ${WIDTH} ${HEIGHT}`)
             .attr('preserveAspectRatio', 'xMidYMid meet');
 
+        // Click handler — undoes zoom transform before projecting to lat/lon
         svg.on('click', function (event) {
             const [px, py] = d3.pointer(event, svg.node());
-            // Account for zoom: undo the transform before projecting
             const t = d3.zoomTransform(svg.node());
             const [tx, ty] = t.invert([px, py]);
             const inverted = PROJECTION.invert([tx, ty]);
@@ -476,19 +478,21 @@ function drawMap(selector, data, year, color) {
             updateMarkersAndInfo();
         });
 
-        // Everything inside this group will pan/zoom together
+        // Cells + countries go inside a zoomable group so they pan/scale together
         const zoomable = svg.append('g').attr('class', 'zoomable');
         zoomable.append('g').attr('class', 'cells-group');
         zoomable.append('path').attr('class', 'countries')
-            .attr('fill', 'none').attr('stroke', '#222').attr('stroke-width', 0.5)
+            .attr('fill', 'none')
+            .attr('stroke', '#222')
+            .attr('stroke-width', 0.5)
             .attr('pointer-events', 'none');
 
-        // Title stays outside zoomable so it doesn't move
+        // Title stays outside zoomable so it doesn't move with pan/zoom
         svg.append('text').attr('class', 'title')
             .attr('x', 10).attr('y', 20).attr('font-size', 14);
 
-        // Marker overlay
-        const overlay = container.append('svg')
+        // Separate overlay SVG for the marker (kept outside zoomable so it doesn't scale)
+        container.append('svg')
             .attr('class', 'marker-svg')
             .attr('viewBox', `0 0 ${WIDTH} ${HEIGHT}`)
             .attr('preserveAspectRatio', 'xMidYMid meet')
@@ -496,12 +500,11 @@ function drawMap(selector, data, year, color) {
             .style('top', 0).style('left', 0)
             .style('width', '100%').style('height', '100%')
             .style('pointer-events', 'none');
-
     }
 
     const cellsGroup = svg.select('g.cells-group');
 
-    // Positional updates only when data actually changed
+    // Positional updates only when the data actually changed
     if (prevDataPerMap.get(selector) !== data) {
         const nLat = Math.round(Math.sqrt(data.cells.length / 2));
         const nLon = nLat * 2;
@@ -513,11 +516,11 @@ function drawMap(selector, data, year, color) {
             .join('rect')
             .attr('x', d => {
                 const lon = d.lon > 180 ? d.lon - 360 : d.lon;
-                return PROJECTION([lon, d.lat])[0] - cellW / 2;  
+                return PROJECTION([lon, d.lat])[0] - cellW / 2;
             })
             .attr('y', d => {
                 const lon = d.lon > 180 ? d.lon - 360 : d.lon;
-                return PROJECTION([lon, d.lat])[1] - cellH / 2; 
+                return PROJECTION([lon, d.lat])[1] - cellH / 2;
             })
             .attr('width', cellW)
             .attr('height', cellH)
@@ -526,32 +529,22 @@ function drawMap(selector, data, year, color) {
         const countries = topojson.feature(world, world.objects.countries);
         svg.select('path.countries')
             .datum(countries)
-            .attr('d', d3.geoPath(PROJECTION)); 
+            .attr('d', d3.geoPath(PROJECTION));
 
         prevDataPerMap.set(selector, data);
     }
 
-    // Always update fills
+    // Always update fills (year may have changed)
     cellsGroup.selectAll('rect')
         .attr('fill', d => {
             const v = d.v[yearIdx];
-            return (v == null || isNaN(v)) ? '#eee' : color(v);
+            return (v == null || isNaN(v)) ? '#fff' : color(v);
         });
 
+    // Update title
     svg.select('text.title')
-        // .text(`${data.variable} — ${data.ssp} — ${year} — ${data.unit}`);
-        .text(`${year}`);
-
-    let marker = svg.select('circle.marker');
-    if (state.clickedPoint) {
-        if (marker.empty()) {
-            marker = svg.append('circle').attr('class', 'marker').attr('r', 5);
-        }
-        const [px, py] = PROJECTION([state.clickedPoint.lon, state.clickedPoint.lat]);
-        marker.attr('cx', px).attr('cy', py);
-    } else {
-        marker.remove();
-    }
+        .text(`${data.variable} — ${data.ssp} — ${year} — ${data.unit}`);
 }
+
 
 init().catch(err => console.error('init failed:', err));
