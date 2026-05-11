@@ -587,8 +587,14 @@ function drawMap(selector, data, year, color) {
         });
 
     // Update title
+
+
     svg.select('text.title')
-        .text(`${year}`);
+        .text(`${year}`)
+        ;
+
+
+    
 }
 
 
