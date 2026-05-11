@@ -5,6 +5,8 @@ import * as topojson from 'https://cdn.jsdelivr.net/npm/topojson-client@3/+esm';
 const WIDTH = 600;
 const HEIGHT = 350;
 const DATA_DIR = 'docs/cmip6_json/';
+const TREND_COLOR_LEFT = '#7e57c2';
+const TREND_COLOR_RIGHT = '#26a69a';
 
 // ---------- State ----------
 const state = {
@@ -432,6 +434,119 @@ function drawInfoPanel(point, leftData, rightData, color) {
   `);
 }
 
+// ---------- trend chart ----------
+function drawTrendChart(point, leftData, rightData) {
+    const container = d3.select('#trend-chart');
+    container.selectAll('*').remove();
+
+    if (!point) return;
+
+    // Get the nearest cell on each side
+    const leftTree = kdTrees.get(`${leftData.variable}_${leftData.ssp}`);
+    const rightTree = kdTrees.get(`${rightData.variable}_${rightData.ssp}`);
+    const leftCell = kdNearest(leftTree, { lat: point.lat, lon: point.lon }).point.cell;
+    const rightCell = kdNearest(rightTree, { lat: point.lat, lon: point.lon }).point.cell;
+
+    // Build (year, value) pairs for each side, dropping NaN entries
+    const years = leftData.years;
+    const leftSeries = years.map((y, i) => ({ year: y, value: leftCell.v[i] }))
+        .filter(d => d.value != null && !isNaN(d.value));
+    const rightSeries = years.map((y, i) => ({ year: y, value: rightCell.v[i] }))
+        .filter(d => d.value != null && !isNaN(d.value));
+
+    if (leftSeries.length === 0 && rightSeries.length === 0) {
+        container.html('<div style="color:#888; font-size:12px;">No data at this location.</div>');
+        return;
+    }
+
+    // Dimensions
+    const W = 1100, H = 220;
+    const margin = { top: 24, right: 80, bottom: 36, left: 60 };
+    const innerW = W - margin.left - margin.right;
+    const innerH = H - margin.top - margin.bottom;
+
+    const svg = container.append('svg')
+        .attr('viewBox', `0 0 ${W} ${H}`)
+        .attr('preserveAspectRatio', 'xMidYMid meet');
+
+    const g = svg.append('g')
+        .attr('transform', `translate(${margin.left}, ${margin.top})`);
+
+    // Scales — shared y-axis so the two lines are directly comparable
+    const allValues = [...leftSeries, ...rightSeries].map(d => d.value);
+    const x = d3.scaleLinear()
+        .domain(d3.extent(years))
+        .range([0, innerW]);
+    const y = d3.scaleLinear()
+        .domain(d3.extent(allValues)).nice()
+        .range([innerH, 0]);
+
+    // Axes
+    g.append('g')
+        .attr('transform', `translate(0, ${innerH})`)
+        .call(d3.axisBottom(x).tickFormat(d3.format('d')).ticks(6))
+        .selectAll('text').attr('font-size', 10);
+
+    g.append('g')
+        .call(d3.axisLeft(y).ticks(5))
+        .selectAll('text').attr('font-size', 10);
+
+    // Y-axis label
+    svg.append('text')
+        .attr('transform', `translate(12, ${H / 2}) rotate(-90)`)
+        .attr('text-anchor', 'middle')
+        .attr('font-size', 11)
+        .text(leftData.unit);
+
+    // Line generator
+    const line = d3.line()
+        .x(d => x(d.year))
+        .y(d => y(d.value));
+
+    // Left and right lines
+    g.append('path')
+        .datum(leftSeries)
+        .attr('fill', 'none')
+        .attr('stroke', TREND_COLOR_LEFT)
+        .attr('stroke-width', 2)
+        .attr('d', line);
+
+    g.append('path')
+        .datum(rightSeries)
+        .attr('fill', 'none')
+        .attr('stroke', TREND_COLOR_RIGHT)
+        .attr('stroke-width', 2)
+        .attr('d', line);
+
+    // Markers for the currently selected years on each line
+    const leftAtYear = leftSeries.find(d => d.year === state.yearLeft);
+    const rightAtYear = rightSeries.find(d => d.year === state.yearRight);
+    if (leftAtYear) {
+        g.append('circle')
+            .attr('cx', x(leftAtYear.year))
+            .attr('cy', y(leftAtYear.value))
+            .attr('r', 4)
+            .attr('fill', TREND_COLOR_LEFT);
+    }
+    if (rightAtYear) {
+        g.append('circle')
+            .attr('cx', x(rightAtYear.year))
+            .attr('cy', y(rightAtYear.value))
+            .attr('r', 4)
+            .attr('fill', TREND_COLOR_RIGHT);
+    }
+
+    // Legend
+    const legend = svg.append('g')
+        .attr('transform', `translate(${margin.left}, 12)`);
+    legend.append('rect').attr('width', 12).attr('height', 2).attr('y', 4).attr('fill', TREND_COLOR_LEFT);
+    legend.append('text').attr('x', 16).attr('y', 8).attr('font-size', 10)
+        .text(SSP_INFO[leftData.ssp].label.split(' — ')[0]);
+    legend.append('rect').attr('width', 12).attr('height', 2).attr('y', 4).attr('x', 100).attr('fill', TREND_COLOR_RIGHT);
+    legend.append('text').attr('x', 116).attr('y', 8).attr('font-size', 10)
+        .text(SSP_INFO[rightData.ssp].label.split(' — ')[0]);
+}
+
 // ---------- tooltip efficiency ----------
 function updateMarkersAndInfo() {
     const leftData = datasets.get(`${state.feature}_${state.left.ssp}`);
@@ -455,6 +570,7 @@ function updateMarkersAndInfo() {
     }
 
     drawInfoPanel(state.clickedPoint, leftData, rightData);
+    drawTrendChart(state.clickedPoint, leftData, rightData);
 }
 
 
@@ -468,6 +584,7 @@ async function render() {
 
     drawLegend(color, config.label, leftData.unit, config.diverging);
     drawInfoPanel(state.clickedPoint, leftData, rightData, color);
+    drawTrendChart(state.clickedPoint, leftData, rightData);
     drawMap('#map-left', leftData, state.yearLeft, color);
     drawMap('#map-right', rightData, state.yearRight, color);
 
@@ -587,14 +704,8 @@ function drawMap(selector, data, year, color) {
         });
 
     // Update title
-
-
     svg.select('text.title')
-        .text(`${year}`)
-        ;
-
-
-    
+        .text(`${year}`);
 }
 
 
