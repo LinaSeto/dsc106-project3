@@ -1,0 +1,189 @@
+body {
+    font-family: sans-serif;
+    margin: 20px;
+}
+
+/* map */
+.maps {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.map {
+    border: 1px solid #ccc;
+    background: #f7f9fb;
+}
+
+.map svg {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+/* legend */
+.legend {
+    flex: 0 0 70px;
+    min-width: 70px;
+}
+
+.legend svg {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+/* factor buttons */
+.controls {
+    margin: 16px 0;
+}
+
+.factors {
+    border: none;
+    padding: 0;
+}
+
+.factors legend {
+    font-weight: bold;
+    padding: 0;
+    margin-right: 12px;
+    float: left;
+}
+
+.factors label {
+    margin-right: 20px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.factors input[type="radio"] {
+    margin-right: 4px;
+}
+
+/* SSP dropdown menu */
+.map-panel {
+    flex: 1 1 0;
+    min-width: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.action-label {
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.ssp-select {
+    font-size: 14px;
+    padding: 6px 8px;
+    border: 1px solid #999;
+    border-radius: 4px;
+    background: white;
+    cursor: pointer;
+}
+
+/* year slider */
+.year-slider-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 4px;
+    font-size: 12px;
+    color: #666;
+}
+
+.year-slider {
+    flex: 1;
+    cursor: pointer;
+}
+
+.year-label {
+    min-width: 32px;
+}
+
+/* tooltip */
+.info-panel {
+    flex: 0 0 220px;
+    min-width: 220px;
+    padding: 12px;
+    border: 1px solid #ccc;
+    background: #fafafa;
+    border-radius: 6px;
+    font-size: 13px;
+    line-height: 1.6;
+    align-self: flex-start;
+}
+
+.info-panel .label {
+    color: #666;
+    font-size: 12px;
+}
+
+.info-panel .value {
+    font-weight: bold;
+}
+
+.info-panel .diff-pos {
+    color: #c0392b;
+}
+
+.info-panel .diff-neg {
+    color: #2874a6;
+}
+
+/* Marker on the map */
+.marker {
+    fill: #e74c3c;
+    stroke: white;
+    stroke-width: 1.5;
+    pointer-events: none;
+    will-change: transform;
+}
+
+/* lock and play on year */
+.year-controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 12px 0;
+    padding: 8px 12px;
+    background: #f0f3f6;
+    border-radius: 6px;
+    width: fit-content;
+}
+
+.control-btn {
+    font-size: 18px;
+    width: 36px;
+    height: 36px;
+    border: 1px solid #999;
+    background: white;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.control-btn:hover {
+    background: #eef;
+}
+
+.control-btn.active {
+    background: #4a6fa5;
+    color: white;
+    border-color: #4a6fa5;
+}
+
+.year-controls-label {
+    font-size: 13px;
+    color: #555;
+}
+
+/* zoom  */
+.zoomable {
+    will-change: transform;
+    transform-origin: 0 0;
+    transform-box: fill-box;
+}

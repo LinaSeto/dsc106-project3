@@ -14,6 +14,53 @@
     <h1 style="text-align: center;">
         Our Actions Forecast Your Climate Future
     </h1>
+
+    <div class="controls">
+        <fieldset class="factors">
+            <legend>Factors:</legend>
+            <label><input type="radio" name="feature" value="tas"> Surface Air Temp</label>
+            <label><input type="radio" name="feature" value="fire"> Fire Index</label>
+            <label><input type="radio" name="feature" value="lai"> Vegetation Area</label>
+            <label><input type="radio" name="feature" value="zos"> Sea Level</label>
+            <label><input type="radio" name="feature" value="drought"> Drought Index</label>
+        </fieldset>
+    </div>
+
+    <div class="maps">
+        <div class="map-panel">
+            <label class="action-label">Take Action</label>
+            <select class="ssp-select" data-side="left"></select>
+            <div id="map-left" class="map"></div>
+            <div class="year-slider-row">
+                <span class="year-label">2015</span>
+                <input type="range" class="year-slider" data-side="left" min="2015" max="2100" step="1" />
+                <span class="year-label">2100</span>
+            </div>
+        </div>
+
+        <div class="map-panel">
+            <label class="action-label">Take Action</label>
+            <select class="ssp-select" data-side="right"></select>
+            <div id="map-right" class="map"></div>
+            <div class="year-slider-row">
+                <span class="year-label">2015</span>
+                <input type="range" class="year-slider" data-side="right" min="2015" max="2100" step="1" />
+                <span class="year-label">2100</span>
+            </div>
+        </div>
+
+        <div id="legend" class="legend"></div>
+        <div id="info-panel" class="info-panel">
+            Click a point on either map.
+        </div>
+    </div>
+
+    <div class="year-controls">
+        <button id="play-button" class="control-btn" title="Play / pause">▶</button>
+        <button id="lock-button" class="control-btn" title="Lock / unlock year sliders">🔒</button>
+        <span class="year-controls-label">Year</span>
+    </div>
+
 </body>
 
 </html>
