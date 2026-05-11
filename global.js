@@ -21,8 +21,8 @@ const FEATURE_CONFIG = {
     tas: { interpolator: t => d3.interpolateRdBu(1 - t), label: 'Surface Air Temp', diverging: true },
     lai: { interpolator: d3.interpolateYlGn, label: 'Vegetation Area' },
     zos: { interpolator: d3.interpolateBlues, label: 'Sea Level', diverging: true },
-    fire: { interpolator: d3.interpolateYlOrRd, label: 'Fire Index' },
-    drought: { interpolator: d3.interpolateYlOrBr, label: 'Drought Index' },
+    fire: { interpolator: d3.interpolateYlOrRd, label: 'Fire Index', landOnly: true },
+    drought: { interpolator: d3.interpolateYlOrBr, label: 'Drought Index', landOnly: true },
 };
 
 const SSP_INFO = {
@@ -51,6 +51,7 @@ const PROJECTION = d3.geoEquirectangular()
 // ---------- Module-level caches ----------
 let manifest;
 let world;
+let land;
 const datasets = new Map();      // "feature_ssp" -> dataset
 const yearIndexes = new Map();   // "feature_ssp" -> Map(year -> index)
 
@@ -243,6 +244,8 @@ async function init() {
         d3.json(DATA_DIR + 'manifest.json'),
         d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json'),
     ]);
+    land = topojson.merge(world, world.objects.countries.geometries);
+
     await render();
     setupControls();
     setupZoom();
@@ -478,6 +481,13 @@ function drawMap(selector, data, year, color) {
             updateMarkersAndInfo();
         });
 
+        const clipId = `land-clip-${selector.replace('#', '')}`;
+        svg.append('defs')
+            .append('clipPath')
+            .attr('id', clipId)
+            .append('path')
+            .attr('d', d3.geoPath(PROJECTION)(land));
+
         // Cells + countries go inside a zoomable group so they pan/scale together
         const zoomable = svg.append('g').attr('class', 'zoomable');
         zoomable.append('g').attr('class', 'cells-group');
@@ -503,6 +513,11 @@ function drawMap(selector, data, year, color) {
     }
 
     const cellsGroup = svg.select('g.cells-group');
+
+    // Apply land clip for land-only features, remove for everything else
+    const clipId = `land-clip-${selector.replace('#', '')}`;
+    cellsGroup.attr('clip-path',
+        FEATURE_CONFIG[state.feature].landOnly ? `url(#${clipId})` : null);
 
     // Positional updates only when the data actually changed
     if (prevDataPerMap.get(selector) !== data) {
