@@ -54,18 +54,30 @@ let world;
 let land;
 const datasets = new Map();      // "feature_ssp" -> dataset
 const yearIndexes = new Map();   // "feature_ssp" -> Map(year -> index)
+const kdTrees = new Map();
 
-// ---------- helper for tooltip ----------
-function findNearestCell(cells, lat, lon) {
-    const targetLon = lon < 0 ? lon + 360 : lon;
-    let best = null;
-    let bestDist = Infinity;
-    for (const cell of cells) {
-        const dlat = cell.lat - lat;
-        const dlon = cell.lon - targetLon;
-        const d = dlat * dlat + dlon * dlon;
-        if (d < bestDist) { bestDist = d; best = cell; }
-    }
+// ---------- Spatial index ----------
+function buildKdTree(points, depth = 0) {
+    if (points.length === 0) return null;
+    const axis = depth % 2 === 0 ? 'lat' : 'lon';
+    points.sort((a, b) => a[axis] - b[axis]);
+    const mid = Math.floor(points.length / 2);
+    return {
+        point: points[mid],
+        left: buildKdTree(points.slice(0, mid), depth + 1),
+        right: buildKdTree(points.slice(mid + 1), depth + 1),
+    };
+}
+
+function kdNearest(node, query, depth = 0, best = { dist: Infinity, point: null }) {
+    if (!node) return best;
+    const axis = depth % 2 === 0 ? 'lat' : 'lon';
+    const d = (node.point.lat - query.lat) ** 2 + (node.point.lon - query.lon) ** 2;
+    if (d < best.dist) { best.dist = d; best.point = node.point; }
+    const diff = query[axis] - node.point[axis];
+    const [near, far] = diff <= 0 ? [node.left, node.right] : [node.right, node.left];
+    best = kdNearest(near, query, depth + 1, best);
+    if (diff ** 2 < best.dist) best = kdNearest(far, query, depth + 1, best);
     return best;
 }
 
@@ -249,6 +261,12 @@ async function init() {
     await render();
     setupControls();
     setupZoom();
+
+    for (const feature of Object.keys(FEATURE_CONFIG)) {
+        for (const ssp of Object.keys(SSP_INFO)) {
+            ensureDataset(feature, ssp);  // no await — fire and forget
+        }
+    }
 }
 
 // ---------- Lazy data loading ----------
@@ -260,6 +278,14 @@ async function ensureDataset(feature, ssp) {
         datasets.set(key, data);
         yearIndexes.set(key, new Map(data.years.map((y, i) => [y, i])));
         console.log(`Loaded ${key}: ${data.cells.length} cells`);
+
+        // Build spatial index, normalising lon to -180/180 at index time
+        const points = data.cells.map(c => ({
+            lat: c.lat,
+            lon: c.lon > 180 ? c.lon - 360 : c.lon,
+            cell: c,
+        }));
+        kdTrees.set(key, buildKdTree(points));
     }
     return datasets.get(key);
 }
@@ -336,14 +362,19 @@ function getColorScale(feature, leftData, rightData) {
     if (colorScaleCache.has(key)) return colorScaleCache.get(key);
 
     const config = FEATURE_CONFIG[feature];
-    const allValues = [
-        ...leftData.cells.flatMap(c => c.v),
-        ...rightData.cells.flatMap(c => c.v),
-    ];
-    const cleanValues = allValues.filter(v => v != null && !isNaN(v))
-        .sort(d3.ascending);
-    const vmin = d3.quantile(cleanValues, 0.02);
-    const vmax = d3.quantile(cleanValues, 0.98);
+
+    const allCells = [...leftData.cells, ...rightData.cells];
+    const step = Math.max(1, Math.floor(allCells.length / 2500));
+    const sampled = [];
+    for (let i = 0; i < allCells.length; i += step) {
+        for (const v of allCells[i].v) {
+            if (v != null && !isNaN(v)) sampled.push(v);
+        }
+    }
+    sampled.sort(d3.ascending);
+
+    const vmin = d3.quantile(sampled, 0.02);
+    const vmax = d3.quantile(sampled, 0.98);
 
     const color = config.diverging
         ? d3.scaleDiverging(config.interpolator)
@@ -371,8 +402,10 @@ function drawInfoPanel(point, leftData, rightData, color) {
         return;
     }
 
-    const leftCell = findNearestCell(leftData.cells, point.lat, point.lon);
-    const rightCell = findNearestCell(rightData.cells, point.lat, point.lon);
+    const leftTree = kdTrees.get(`${leftData.variable}_${leftData.ssp}`);
+    const rightTree = kdTrees.get(`${rightData.variable}_${rightData.ssp}`);
+    const leftCell = kdNearest(leftTree, { lat: point.lat, lon: point.lon }).point.cell;
+    const rightCell = kdNearest(rightTree, { lat: point.lat, lon: point.lon }).point.cell;
 
     const yIdxL = yearIndexes.get(`${leftData.variable}_${leftData.ssp}`).get(state.yearLeft);
     const yIdxR = yearIndexes.get(`${rightData.variable}_${rightData.ssp}`).get(state.yearRight);
