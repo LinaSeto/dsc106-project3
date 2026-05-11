@@ -334,23 +334,15 @@ body {
     width: 100%;
     height: 100%; 
     background-color: #f9f9f9;
-<<<<<<< Updated upstream
     border: 1px solid #ddd; 
 }
-=======
-    border: 1px solid #ddd; }
->>>>>>> Stashed changes
 
 /* Styling the slider row inside the box */
 .year-slider-row {
     display: flex;
     align-items: center;
     gap: 10px;
-<<<<<<< Updated upstream
-    margin-top: auto;
-=======
     margin-top: auto; 
->>>>>>> Stashed changes
     padding-top: 10px;
     color: #3d3d3d;
     font-weight: bold;
@@ -359,10 +351,7 @@ body {
 26a69a */
 .year-slider {
     flex-grow: 1; 
-<<<<<<< Updated upstream
-=======
     accent-color: #7e57c2
->>>>>>> Stashed changes
 }
 
 /* Left Map Slider */
@@ -377,15 +366,9 @@ body {
 
 
 .ssp-select {
-<<<<<<< Updated upstream
-    max-width: fit-content; 
-    font-size: 12px;
-    padding: 2px 1px; 
-=======
     max-width: fit-content;  
     font-size: 12px;
     padding: 2px 1px;    
->>>>>>> Stashed changes
     border: 1px solid #999;
     border-radius: 4px;
     background: white;
@@ -424,7 +407,6 @@ body {
     width: 100%; 
 }
 
-<<<<<<< Updated upstream
 /* trend chart */
 #trend-chart {
     width: 100%;
@@ -441,7 +423,6 @@ body {
     height: 200px;
     display: block;
 }
-=======
 .factors {
     display: flex;
     flex-wrap: wrap;
@@ -527,4 +508,3 @@ body {
     }
 }
 
->>>>>>> Stashed changes
