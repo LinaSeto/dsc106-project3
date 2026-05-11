@@ -11,14 +11,51 @@
 </head>
 
 <body>
-    <h1 style="text-align: center;">
-        Our Actions Forecast Your Climate Future
-    </h1>
+    <!-- Popup overlay -->
+    <div id="intro-popup" class="intro-popup visible">
+        <div class="intro-popup-content">
+            <h2>Shape Your Climate Future</h2>
+            <p>Welcome to a choose-your-own-future exploration of Earth’s changing climate. Here, you can compare
+                potential futures, look at how those futures affect you specifically, and discover how different
+                pathways shape the world over time.</p>
+            <ul>
+                <li><strong>Select a Climate Indicator:</strong> Begin by choosing one facet of our changing climate to
+                    explore.</li>
+                <li><strong>Compare Two Emission Scenarios:</strong> Use the dropdown menu to compare different climate
+                    scenarios; explore specifics by hovering over each option.</li>
+                <li><strong>Travel Through Time:</strong> Move the year slider to watch climate predictions from 2015 to
+                    2100.<ul>
+                        <li>Lock timelines together to compare the same moment in time across scenarios</li>
+                        <li>Unlock timelines to compare across years</li>
+                        <li>Press play to animate the change in climate over time</li>
+                    </ul>
+                </li>
+                <li><strong>Explore Local Details:</strong> Zoom, pan, and navigate around the globe to investigate
+                    local changes or regional patterns.</li>
+                <li><strong>Find Direct Impact on You:</strong> Click anywhere on the maps to reveal detailed values and
+                    comparison for that location.</li>
+                <li><strong>Imagine Different Futures:</strong> Explore different options and combinations of your
+                    choosing. Come to understand how our choices today shape the climate of the future!</li>
+            </ul>
+            <button id="intro-continue" >Get Started!</button>
+        </div>
+    </div>
 
-    <p style="text-align: center; color: gray; font-size: 12px;" >
-        Compare various climate indicators across different emissions scenarios. Data was gathered from simulations in the CMIP6 project. Fire and Drought indices were calculated using the Canadian Fire Weather Index and Keetch-Bryam Drought Index respectively. Surface Air Temperature, Leaf Area Index, and Sea Surface Height Above Geoid were taken from the project without further transformations.
+    <div class="title-row">
+        <h1>
+            Our Actions Forecast Your Climate Future
+        </h1>
+        <button id="intro-help" class="intro-help" title="Press to view interaction guide">?</button>
+    </div>
+
+    <p style="text-align: center; color: gray; font-size: 12px;">
+        Compare various climate indicators across different emissions scenarios. Data was gathered from simulations in
+        the CMIP6 project. Fire and Drought indices were calculated using the Canadian Fire Weather Index and
+        Keetch-Bryam Drought Index respectively. Surface Air Temperature, Leaf Area Index, and Sea Surface Height Above
+        Geoid were taken from the project without further transformations.
     </p>
 
+    <!-- climate indicator buttons -->
     <div class="controls">
         <fieldset class="factors">
             <legend>Climate Indicators:</legend>
@@ -30,6 +67,7 @@
         </fieldset>
     </div>
 
+    <!-- maps -->
     <div class="maps">
         <div class="map-panel">
             <label class="action-label">Emission Scenario 1:</label>
@@ -59,6 +97,7 @@
         </div>
     </div>
 
+    <!-- buttons for year slider -->
     <div class="year-controls">
         <button id="play-button" class="control-btn" title="Play / pause">▶</button>
         <button id="lock-button" class="control-btn" title="Lock / unlock year sliders">🔒</button>

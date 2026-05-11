@@ -492,6 +492,13 @@ function drawMap(selector, data, year, color) {
             .attr('viewBox', `0 0 ${WIDTH} ${HEIGHT}`)
             .attr('preserveAspectRatio', 'xMidYMid meet');
 
+        const clipId = `land-clip-${selector.replace('#', '')}`;
+        svg.append('defs')
+            .append('clipPath')
+            .attr('id', clipId)
+            .append('path')
+            .attr('d', d3.geoPath(PROJECTION)(land));
+
         svg.on('click', function (event) {
             // d3.pointer with the zoomable group accounts for the SVG transform
             const zoomableNode = d3.select(this).select('g.zoomable').node();
@@ -586,3 +593,40 @@ function drawMap(selector, data, year, color) {
 
 
 init().catch(err => console.error('init failed:', err));
+
+// ---------- Popup instructions ----------
+function setupIntroPopup() {
+    const popup = document.getElementById('intro-popup');
+    const popupContent = popup.querySelector('.intro-popup-content');
+    const continueBtn = document.getElementById('intro-continue');
+    const helpBtn = document.getElementById('intro-help');
+
+    // Set transform-origin so popup shrinks toward / grows from the help button
+    function updateOrigin() {
+        const btnRect = helpBtn.getBoundingClientRect();
+        const cx = btnRect.left + btnRect.width / 2;
+        const cy = btnRect.top + btnRect.height / 2;
+        popupContent.style.transformOrigin = `${cx}px ${cy}px`;
+    }
+
+    function closePopup() {
+        updateOrigin();
+        popup.classList.add('closing');
+        popup.classList.remove('visible');
+        setTimeout(() => popup.classList.remove('closing'), 400);
+    }
+
+    function openPopup() {
+        updateOrigin();
+        popup.classList.add('visible', 'opening');
+        setTimeout(() => popup.classList.remove('opening'), 400);
+    }
+
+    continueBtn.addEventListener('click', closePopup);
+    helpBtn.addEventListener('click', openPopup);
+
+    // Set initial origin for first close
+    updateOrigin();
+}
+
+setupIntroPopup();
