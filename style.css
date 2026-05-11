@@ -136,7 +136,6 @@ body {
 .marker {
     fill: #e74c3c;
     stroke: white;
-    stroke-width: 1.5;
     pointer-events: none;
     will-change: transform;
 }

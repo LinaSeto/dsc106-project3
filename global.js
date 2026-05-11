@@ -211,40 +211,33 @@ function setupControls() {
 
 // ---------- set up zoom feature ----------
 function setupZoom() {
-    let pendingTransform = null;
-    let pendingSourceSvg = null;
-    let scheduled = false;
-
     const zoom = d3.zoom()
         .scaleExtent([1, 10])
         .translateExtent([[0, 0], [WIDTH, HEIGHT]])
         .on('zoom', ({ transform, sourceEvent }) => {
-            pendingTransform = transform;
-            if (sourceEvent) pendingSourceSvg = sourceEvent.currentTarget;
+            // SVG transform attribute, not CSS
+            d3.selectAll('g.zoomable')
+                .attr('transform', transform);
 
-            if (scheduled) return;
-            scheduled = true;
-            requestAnimationFrame(() => {
-                scheduled = false;
-                d3.selectAll('g.zoomable')
-                    .style('transform',
-                        `translate(${pendingTransform.x}px, ${pendingTransform.y}px) scale(${pendingTransform.k})`);
+            // Update marker visual size on each map
+            for (const mapId of ['#map-left', '#map-right']) {
+                const mainSvg = d3.select(mapId).select('svg.main-svg').node();
+                if (!mainSvg) continue;
+                const t = d3.zoomTransform(mainSvg);
+                d3.select(mapId).select('circle.marker')
+                    .attr('r', 5 / t.k)
+                    .attr('stroke-width', 1.5 / t.k);
+            }
 
-                if (state.clickedPoint) {
-                    const [px, py] = PROJECTION([state.clickedPoint.lon, state.clickedPoint.lat]);
-                    d3.selectAll('svg.marker-svg circle.marker')
-                        .attr('cx', pendingTransform.applyX(px))
-                        .attr('cy', pendingTransform.applyY(py));
-                }
-
-                if (pendingSourceSvg) {
-                    const src = pendingSourceSvg;
-                    pendingSourceSvg = null;
-                    d3.selectAll('svg.main-svg').each(function () {
-                        if (this !== src) d3.select(this).call(zoom.transform, pendingTransform);
-                    });
-                }
-            });
+            // Sync the other map's zoom
+            if (sourceEvent) {
+                const src = sourceEvent.currentTarget;
+                d3.selectAll('svg.main-svg').each(function () {
+                    if (this !== src) {
+                        d3.select(this).call(zoom.transform, transform);
+                    }
+                });
+            }
         });
 
     d3.selectAll('svg.main-svg').call(zoom);
@@ -446,22 +439,18 @@ function updateMarkersAndInfo() {
     if (!leftData || !rightData) return;
 
     for (const selector of ['#map-left', '#map-right']) {
-        // Wipe ANY existing markers in this map's container, wherever they are
-        d3.select(selector).selectAll('circle.marker').remove();
+        const mainSvg = d3.select(selector).select('svg.main-svg');
+        const markersGroup = mainSvg.select('g.markers-group');
+        markersGroup.selectAll('circle.marker').remove();
 
         if (state.clickedPoint) {
-            const mainSvg = d3.select(selector).select('svg.main-svg').node();
-            const overlay = d3.select(selector).select('svg.marker-svg');
-            if (!mainSvg || overlay.empty()) continue;
-
-            const t = d3.zoomTransform(mainSvg);
-            const [px, py] = PROJECTION([state.clickedPoint.lon, state.clickedPoint.lat]);
-
-            overlay.append('circle')
+            const t = d3.zoomTransform(mainSvg.node());
+            markersGroup.append('circle')
                 .attr('class', 'marker')
-                .attr('r', 5)
-                .attr('cx', t.applyX(px))
-                .attr('cy', t.applyY(py));
+                .attr('cx', state.clickedPoint.px)
+                .attr('cy', state.clickedPoint.py)
+                .attr('r', 5 / t.k)  // counteract zoom scale so visual size stays constant
+                .attr('stroke-width', 1.5 / t.k);
         }
     }
 
@@ -503,38 +492,39 @@ function drawMap(selector, data, year, color) {
             .attr('viewBox', `0 0 ${WIDTH} ${HEIGHT}`)
             .attr('preserveAspectRatio', 'xMidYMid meet');
 
-        // Click handler — undoes zoom transform before projecting to lat/lon
         svg.on('click', function (event) {
-            const [px, py] = d3.pointer(event, svg.node());
-            const t = d3.zoomTransform(svg.node());
-            const [tx, ty] = t.invert([px, py]);
+            // d3.pointer with the zoomable group accounts for the SVG transform
+            const zoomableNode = d3.select(this).select('g.zoomable').node();
+            const [tx, ty] = d3.pointer(event, zoomableNode);
             const inverted = PROJECTION.invert([tx, ty]);
             if (!inverted) return;
-            state.clickedPoint = { lat: inverted[1], lon: inverted[0] };
+
+            state.clickedPoint = {
+                lat: inverted[1],
+                lon: inverted[0],
+                px: tx,
+                py: ty,
+            };
             updateMarkersAndInfo();
         });
 
-        const clipId = `land-clip-${selector.replace('#', '')}`;
-        svg.append('defs')
-            .append('clipPath')
-            .attr('id', clipId)
-            .append('path')
-            .attr('d', d3.geoPath(PROJECTION)(land));
-
-        // Cells + countries go inside a zoomable group so they pan/scale together
         const zoomable = svg.append('g').attr('class', 'zoomable');
         zoomable.append('g').attr('class', 'cells-group');
+
+        // Countries before markers so markers render on top
         zoomable.append('path').attr('class', 'countries')
             .attr('fill', 'none')
             .attr('stroke', '#222')
             .attr('stroke-width', 0.5)
             .attr('pointer-events', 'none');
 
-        // Title stays outside zoomable so it doesn't move with pan/zoom
+        // Markers last so they're always on top
+        zoomable.append('g').attr('class', 'markers-group');
+
         svg.append('text').attr('class', 'title')
             .attr('x', 10).attr('y', 20).attr('font-size', 14);
 
-        // Separate overlay SVG for the marker (kept outside zoomable so it doesn't scale)
+        // Keep the overlay SVG but only for pointer-events passthrough, no markers
         container.append('svg')
             .attr('class', 'marker-svg')
             .attr('viewBox', `0 0 ${WIDTH} ${HEIGHT}`)
