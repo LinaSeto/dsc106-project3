@@ -1,6 +1,4 @@
-
-
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -16,13 +14,23 @@
     <!-- Popup overlay -->
     <div id="intro-popup" class="intro-popup visible">
         <div class="intro-popup-content">
-            <h2>Shape Your Climate Future</h2>
+            <div class="header-row">
+                <h2>Shape Your Climate Future</h2>
+                <div class="chrome-notice">
+                    <svg class="caution-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2 L22 20 L2 20 Z" fill="#f5c518" stroke="#d4a017" stroke-width="1"
+                            stroke-linejoin="round" />
+                        <text x="12" y="17" text-anchor="middle" font-size="13" font-weight="bold" fill="#000">!</text>
+                    </svg>
+                    <span>Performs best in Google Chrome</span>
+                </div>
+            </div>
             <p>Welcome to a choose-your-own-future exploration of Earth’s changing climate. Here, you can compare
                 potential futures, look at how those futures affect you specifically, and discover how different
                 pathways shape the world over time.</p>
             <ul>
                 <li><strong>Select a Climate Indicator:</strong> Begin by choosing one facet of our changing climate to
-                    explore.</li>
+                    explore. Hover over to learn more information about each. </li>
                 <li><strong>Compare Two Emission Scenarios:</strong> Use the dropdown menu to compare different climate
                     scenarios; explore specifics by hovering over each option.</li>
                 <li><strong>Travel Through Time:</strong> Move the year slider to watch climate predictions from 2015 to
@@ -39,7 +47,7 @@
                 <li><strong>Imagine Different Futures:</strong> Explore different options and combinations of your
                     choosing. Come to understand how our choices today shape the climate of the future!</li>
             </ul>
-            <button id="intro-continue" >Start Predicting!</button>
+            <button id="intro-continue">Start Predicting!</button>
         </div>
     </div>
 
@@ -60,23 +68,34 @@
     <!-- climate indicator buttons -->
     <div class="controls">
         <fieldset class="factors">
-            <!-- <legend>Climate Indicators:</legend> -->
-             <div class="factors-title">Climate Indicators:</div>
-            <label><input type="radio" name="feature" value="tas"> Surface Air Temp</label>
-            <label><input type="radio" name="feature" value="fire"> Fire Index</label>
-            <label><input type="radio" name="feature" value="lai"> Vegetation Index</label>
-            <label><input type="radio" name="feature" value="zos"> Sea Level</label>
-            <label><input type="radio" name="feature" value="drought"> Drought Index</label>
+            <div class="factors-title">Climate Indicators:</div>
+            <label
+                title="Measures the temperature of the air near the Earth's surface.">
+                <input type="radio" name="feature" value="tas"> Surface Air Temp
+            </label>
+            <label title="Quantifies the risk of forest fire spread calculated with temperature, humidity, wind speed, and precipitation using the Canadian Forest Fire Danger Rating System.">
+                <input type="radio" name="feature" value="fire"> Fire Index
+            </label>
+            <label
+                title="Leaf Area Index (LAI) — the amount of leaf coverage per square meter. Higher values indicate more leafy plant cover.">
+                <input type="radio" name="feature" value="lai"> Vegetation Index
+            </label>
+            <label title="Measures the sea surface height in cm, relative to a baseline level. Rising values indicate sea level rise.">
+                <input type="radio" name="feature" value="zos"> Sea Level
+            </label>
+            <label title="The Keetch-Byram Drought Index (KBDI) is a scale for estimating the dryness of the soil and upper organic layers. Used to approximate drought likeliness.">
+                <input type="radio" name="feature" value="drought"> Drought Index
+            </label>
         </fieldset>
     </div>
 
     <!-- maps -->
     <div class="maps">
         <div class="map-panel">
-             <div class="map-header">
-            <label class="action-label">Emission Scenario 1:</label>
-            <select class="ssp-select" data-side="left"></select>
-             </div>
+            <div class="map-header">
+                <label class="action-label">Emission Scenario 1:</label>
+                <select class="ssp-select" data-side="left"></select>
+            </div>
 
             <div id="map-left" class="map"></div>
             <div class="year-slider-row">
@@ -87,10 +106,10 @@
         </div>
 
         <div class="map-panel">
-             <div class="map-header">
-            <label class="action-label">Emission Scenario 2:</label>
-            <select class="ssp-select" data-side="right"></select>
-             </div>
+            <div class="map-header">
+                <label class="action-label">Emission Scenario 2:</label>
+                <select class="ssp-select" data-side="right"></select>
+            </div>
             <div id="map-right" class="map"></div>
             <div class="year-slider-row">
                 <span class="year-label">2015</span>
@@ -108,9 +127,9 @@
 
     <!-- buttons for year slider -->
     <div class="year-controls">
-       
+
         <button id="play-button" class="control-btn" title="Play / pause">▶</button>
-        <button id="lock-button" class="control-btn" title="Lock / unlock year sliders">🔒</button> 
+        <button id="lock-button" class="control-btn" title="Lock / unlock year sliders">🔒</button>
         <span class="year-controls-label">Year</span>
     </div>
 

@@ -13,8 +13,8 @@ const state = {
     feature: 'tas',
     left: { ssp: 'ssp126' },
     right: { ssp: 'ssp585' },
-    yearLeft: 2015,
-    yearRight: 2100,
+    yearLeft: 2026,
+    yearRight: 2026,
     yearsLocked: true,
     clickedPoint: null,
 };
