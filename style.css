@@ -34,7 +34,6 @@ body {
 .legend {
     flex: 0 0 70px;
     min-width: 70px;
-
     font-family: inherit;
 }
 
@@ -123,9 +122,31 @@ body {
     min-width: 32px;
 }
 
+/* New container to stack info-panel and year-controls */
+.side-controls {
+    display: flex;
+    flex-direction: column;
+    min-width: 220px;
+    gap: 12px;  
+    padding: 16px; 
+    justify-content: flex-start;
+    margin: 0px;
+}
+
+.top-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;  
+  justify-content: center;  
+  width: 100%;
+  margin: 0px;
+}
+
 /* tooltip */
 .info-panel {
-    flex: 0 0 220px;
+    /* flex: 0 0 auto; */
+    display: flex;
+    flex-direction: column;
     min-width: 220px;
     padding: 12px;
     border: 1px solid #ccc;
@@ -133,8 +154,27 @@ body {
     border-radius: 6px;
     font-size: 13px;
     line-height: 1.6;
-    align-self: flex-start;
+    box-sizing: border-box;
+    align-items: center;
+    height: 282px;  
+    justify-content: center;  
 }
+
+#info-panel.has-data {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center;
+    align-items: flex-start  !important;  
+    justify-content: left !important;
+    text-align: left !important;
+}
+
+
+#info-panel.has-data > * {
+    width: 100%;
+    box-sizing: border-box;
+}
+
 
 .info-panel .label {
     color: #666;
@@ -162,29 +202,46 @@ body {
 }
 
 /* lock and play on year */
-.year-controls {
+ .year-controls {
     display: flex;
+<<<<<<< Updated upstream
     align-items: center;
     gap: 5px;
     margin: 5px;
     padding: 7px 9px;
+=======
+    align-items: left;
+    margin: 0px ;
+    padding: 0px;
+>>>>>>> Stashed changes
     background: #edf0f2db;
     border-radius: 8px;
-    width: fit-content;
-}
+    width: 100%;             ;
+    min-width: 100%;
+    gap: 1px ;
+} 
 
 .control-btn {
     font-size: 18px;
-    width: 36px;
+    /* min-width: auto !important;  */
+    width: 38px;
+    width: 50%;
     height: 36px;
     border: 1px solid #999;
     background: rgb(240, 240, 240);
-    border-radius: 10px;
+    border-radius: 8px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
+<<<<<<< Updated upstream
 
+=======
+    margin: 0px; 
+    gap: 4px ;
+    color: rgb(81, 81, 81);
+    
+>>>>>>> Stashed changes
 }
 
 .control-btn:hover {
@@ -192,16 +249,31 @@ body {
 }
 
 .control-btn.active {
-    background: #a6b9d5af;
-    color: white;
-    border-color: #7395c8ae;
+    background: #d7e5f8af;
+    color: rgb(81, 81, 81);
+    border-color: #9ca9bdae;
 }
 
 .year-controls-label {
-    font-size: 13px;
+    font-size: 14px;
     color: #555;
+    font-weight: bold;
+    margin-right: auto;
+} 
 
-}
+ #lock-button {
+width: auto !important;;
+    padding: 0 12px;  
+    gap: 8px;        
+    white-space: nowrap;          
+    font-size: 14px; 
+    display: flex;
+    width: 155px !important;        
+    max-width: 155px !important;   
+    min-width: 155px !important;   
+    flex-shrink: 0 !important;  
+    
+} 
 
 /* zoom  */
 .zoomable {
@@ -311,6 +383,7 @@ body {
     align-items: center;
     justify-content: center;
     gap: 12px;
+    margin: 0; 
 }
 
 .title-row h1 {
@@ -354,10 +427,15 @@ body {
     padding: 15px;
     background-color: #fff;
     display: flex;
+<<<<<<< Updated upstream
     flex-direction: column;
     gap: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     margin: 10px;
+=======
+    flex-direction: column;                
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+>>>>>>> Stashed changes
 }
 
 /* Ensure the maps container allows the boxes to sit side-by-side */
@@ -366,7 +444,29 @@ body {
     justify-content: center;
     flex-wrap: wrap;
     gap: 20px;
-    padding: 20px;
+    align-items: center;
+  
+}
+
+.map-header {
+    display: flex;
+    justify-content: flex-start;  
+    align-items: center;        
+    width: 100%;
+    gap: 10px;                 
+    margin-bottom: 5px;
+}
+
+.map-year-badge {
+    margin-left: auto;         
+    flex: 0 0 auto;    
+    font-size: 18px;
+    font-weight: bold;
+    color: #fff;
+    background-color: #3d3d3d;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-family: inherit;     /* Keeps numbers stable while scrolling timelines */
 }
 
 /* Ensures the map itself fills its portion of the box */
@@ -390,6 +490,7 @@ body {
 
 /* 7e57c2
 26a69a */
+<<<<<<< Updated upstream
 .year-slider {
     flex-grow: 1;
     accent-color: #7e57c2
@@ -405,6 +506,8 @@ body {
     accent-color: #26a69a;
 }
 
+=======
+>>>>>>> Stashed changes
 
 .ssp-select {
     max-width: fit-content;
@@ -423,6 +526,7 @@ body {
 
 .year-controls {
     display: flex;
+    width: 100%;
     align-items: center;
     justify-content: center;
     gap: 8px;
@@ -430,8 +534,13 @@ body {
     margin-bottom: 0;
     background-color: rgba(250, 250, 250, 0.5);
     border: 1px solid #ccc;
+<<<<<<< Updated upstream
     border-radius: 6px;
     box-sizing: border-box;
+=======
+    border-radius: 6x;
+    box-sizing: border-box; 
+>>>>>>> Stashed changes
     max-width: fit-content;
 }
 
@@ -455,9 +564,15 @@ body {
     max-width: 1200px;
     margin: 16px auto 0;
     padding: 16px;
+    margin-top: 1px;
     background: white;
+<<<<<<< Updated upstream
     border-radius: 8px;
     border: 2px solid #919191;
+=======
+    border: none;
+    background-color: transparent;
+>>>>>>> Stashed changes
 }
 
 #trend-chart svg {
@@ -466,12 +581,20 @@ body {
     display: block;
 }
 
+<<<<<<< Updated upstream
+=======
+#trend-chart:has(svg){
+   padding: 16px;
+   border: 2px solid #919191; 
+   border-radius: 8px;}
+
+>>>>>>> Stashed changes
 .factors {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     gap: 15px;
-    border: 2px solid #333;
+    border: 2px solid #919191;  
     border-radius: 8px;
     padding: 15px;
     background-color: #fff;
@@ -485,6 +608,7 @@ body {
     font-size: 14px;
 }
 
+<<<<<<< Updated upstream
 
 /* for chrome  */
 .year-slider[data-side="left"] {
@@ -514,6 +638,8 @@ body {
 }
 
 
+=======
+>>>>>>> Stashed changes
 /* SAFARI */
 @supports (-webkit-hyphens:none) {
     .year-slider {
@@ -546,12 +672,14 @@ body {
         appearance: none;
         height: 17px;
         width: 17px;
-        background: #26a69a;
+        background: #24978b;
         margin-top: -5px;
         border-radius: 10px;
     }
+    
 }
 
+<<<<<<< Updated upstream
 /* writeup togglebox styling */
 details {
     border: 2px solid black;
@@ -566,3 +694,24 @@ summary {
     margin: -0.5em -0.5em 0;
     padding: 0.5em;
 }
+=======
+/* fro chrome  */
+.year-slider[data-side="left"] {
+    accent-color: #7e57c2;
+}
+
+.year-slider[data-side="right"] {
+    accent-color: #24978b;
+}
+
+
+ /* Firefox */
+.year-slider[data-side="left"]::-moz-range-thumb {
+    background: #7e57c2;
+}
+
+.year-slider[data-side="right"]::-moz-range-thumb {
+    background: #24978b;
+} 
+
+>>>>>>> Stashed changes

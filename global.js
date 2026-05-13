@@ -201,13 +201,13 @@ function setupControls() {
     d3.select('#lock-button').on('click', function () {
         state.yearsLocked = !state.yearsLocked;
         d3.select(this)
-            .text(state.yearsLocked ? '🔒' : '🔓')
+            .text(state.yearsLocked ? '🔒 Lock Timeline' : '🔓 Unlock Timeline')
             .classed('active', state.yearsLocked);
     });
 
     // Set initial lock button visual to match state
     d3.select('#lock-button')
-        .text(state.yearsLocked ? '🔒' : '🔓')
+        .text(state.yearsLocked ? '🔒 Lock Timeline' : '🔓 Unlock Timeline')
         .classed('active', state.yearsLocked);
 }
 
@@ -394,8 +394,11 @@ function drawInfoPanel(point, leftData, rightData, color) {
 
     if (!point) {
         div.html('Click a point on either map.');
+        div.classed('has-data', false); 
+
         return;
     }
+        div.classed('has-data', true);
 
     const leftTree = kdTrees.get(`${leftData.variable}_${leftData.ssp}`);
     const rightTree = kdTrees.get(`${rightData.variable}_${rightData.ssp}`);
@@ -598,6 +601,16 @@ function drawMap(selector, data, year, color) {
     const container = d3.select(selector);
     const key = `${data.variable}_${data.ssp}`;
     const yearIdx = yearIndexes.get(key).get(year);
+//add
+    let parentPanel = d3.select(container.node().parentNode);
+    let htmlYearBadge = parentPanel.select('.map-year-badge');
+    if (htmlYearBadge.empty()) {
+        htmlYearBadge = container.insert('div', ':first-child')
+            .attr('class', 'map-year-badge');
+    }
+    
+
+
 
     // First-time SVG skeleton
     let svg = container.select('svg.main-svg');
@@ -645,8 +658,8 @@ function drawMap(selector, data, year, color) {
         // Markers last so they're always on top
         zoomable.append('g').attr('class', 'markers-group');
 
-        svg.append('text').attr('class', 'title')
-            .attr('x', 10).attr('y', 20).attr('font-size', 14);
+        // svg.append('text').attr('class', 'title')
+        //     .attr('x', 10).attr('y', 20).attr('font-size', 14);
 
         // Keep the overlay SVG but only for pointer-events passthrough, no markers
         container.append('svg')
@@ -706,7 +719,10 @@ function drawMap(selector, data, year, color) {
     // Update title
     svg.select('text.title')
         .text(`${year}`);
+    htmlYearBadge.text(year);
+
 }
+
 
 
 init().catch(err => console.error('init failed:', err));
