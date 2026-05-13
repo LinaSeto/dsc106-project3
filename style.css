@@ -551,3 +551,18 @@ body {
         border-radius: 10px;
     }
 }
+
+/* writeup togglebox styling */
+details {
+    border: 2px solid black;
+    border-radius: 4px;
+    padding: 0.5em;
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+
+summary {
+    font-weight: bold;
+    margin: -0.5em -0.5em 0;
+    padding: 0.5em;
+}
