@@ -58,32 +58,34 @@
         <button id="intro-help" class="intro-help" title="Press to view interaction guide">?</button>
     </div>
 
-    <p style="text-align: center; color: gray; font-size: 12px;">
+    <p style="text-align: center; color: gray; font-size: 11.5px;">
         Compare various climate indicators across different emissions scenarios. Data was gathered from simulations in
         the CMIP6 project. Fire and Drought indices were calculated using the Canadian Fire Weather Index and
         Keetch-Bryam Drought Index respectively. Surface Air Temperature, Leaf Area Index, and Sea Surface Height Above
-        Geoid were taken from the project without further transformations.
+        Geoid were taken from the project without further transformations. All data was aggregated by year.
     </p>
 
     <!-- climate indicator buttons -->
     <div class="controls">
         <fieldset class="factors">
             <div class="factors-title">Climate Indicators:</div>
-            <label
-                title="Measures the temperature of the air near the Earth's surface.">
+            <label title="Measures the temperature of the air near the Earth's surface.">
                 <input type="radio" name="feature" value="tas"> Surface Air Temp
             </label>
-            <label title="Quantifies the risk of forest fire spread calculated with temperature, humidity, wind speed, and precipitation using the Canadian Forest Fire Danger Rating System.">
+            <label
+                title="Quantifies the risk of forest fire spread calculated with temperature, humidity, wind speed, and precipitation using the Canadian Forest Fire Danger Rating System.">
                 <input type="radio" name="feature" value="fire"> Fire Index
             </label>
             <label
                 title="Leaf Area Index (LAI) — the amount of leaf coverage per square meter. Higher values indicate more leafy plant cover.">
                 <input type="radio" name="feature" value="lai"> Vegetation Index
             </label>
-            <label title="Measures the sea surface height in cm, relative to a baseline level. Rising values indicate sea level rise.">
+            <label
+                title="Measures the sea surface height in cm, relative to a baseline level. Rising values indicate sea level rise.">
                 <input type="radio" name="feature" value="zos"> Sea Level
             </label>
-            <label title="The Keetch-Byram Drought Index (KBDI) is a scale for estimating the dryness of the soil and upper organic layers. Used to approximate drought likeliness.">
+            <label
+                title="The Keetch-Byram Drought Index (KBDI) is a scale for estimating the dryness of the soil and upper organic layers. Used to approximate drought likeliness.">
                 <input type="radio" name="feature" value="drought"> Drought Index
             </label>
         </fieldset>
@@ -132,6 +134,79 @@
         <button id="lock-button" class="control-btn" title="Lock / unlock year sliders">🔒</button>
         <span class="year-controls-label">Year</span>
     </div>
+
+    <hr>
+    <h2 style="text-align: center;">Writeup</h2>
+    <p>Our group decided to work with the CMIP6 dataset. We found the ability to model future scenarios to be the most
+        intriguing aspect of the data, and wanted to create a visualization to explore how the global climate changes
+        over time under different conditions.
+    </p>
+    <p>Our initial design involved a single global heatmap and choosing a climate indicator and emissions scenario to
+        plot. The user could scroll through time to see changes across the world. A heatmap felt like the most ideal
+        encoding for the geospatial data, which was continuous and changed gradually over a large longitude-latitude
+        grid. The design was approached in such a way for the user to explore personal connections to the data: this
+        included the addition of a tooltip to gain detailed data on specific regions, and offering a choice of
+        indicators that explored meaningful personal impacts, such as fire and drought.
+    </p>
+    <p>When designing for interactivity, we realized that a single heatmap did not offer enough opportunities for
+        meaningful interaction and exploration. A key point we wanted to convey is the ability to compare different
+        scenarios. Thus, we altered our design to feature two side-by-side visualizations to facilitate direct
+        comparison between different climate scenarios. A user would be able to choose a climate indicator to plot, and
+        a simulation scenario for each plot. Zooming, panning, and tooltip interactions would be linked. For example,
+        clicking a region activates a tooltip that compares the same region in both plots, allowing the user to see the
+        exact values at each point and the numeric difference. This also allows the interactivity to reduce ambiguity in
+        analyzing the color scale. Additionally, scrolling over time can be linked or unliked between the two plots.
+        This allows a user to explore things such as how two different emissions scenarios diverge in the same time
+        period, or how a single emissions scenario changes over time.
+    </p>
+    <p>Adding these two side-by-side plots also introduces another visualization challenge: heatmaps between two
+        different emissions scenarios tended to produce the same visual trends; for example, global temperatures are
+        warmer near the equator and colder further away from it, regardless of emissions. However, smaller ‘subtler’
+        variations within a single region across different scenarios are of just as much consequence—a warming of 2°C
+        within a region is a significant difference, but such a distinction may be lost in our heatmaps. When clicking
+        on a region, this activates a lineplot that compares the change in that single region over time between the two
+        scenarios. This allows smaller, subtler variations in our indices, both over time and between scenarios, to
+        become more distinctive and tangible. The two trendlines were differentiated by purple and teal colors. These
+        two were specifically chosen in order to avoid any connotations of positivity or negativity, or any of the color
+        scales used in our climate index heatmaps.
+    </p>
+    <p>Although a discrete, binned color scale is often preferred for visual clarity, especially in static
+        visualizations, the unique elements of our interactive design motivated our decision to use a heatmap with a
+        continuous color scale. The tooltip allowed for a user to be able to gain direct knowledge on exact values that
+        different hues represented. If values were binned into larger groups, a user finding that two regions both
+        colored exactly the same actually had different values may be confusing. Additionally, as mentioned previously,
+        small subtle variations (like warming temperatures as small as a 1°C), are important in the context of climate
+        data, so it was important to us to keep the expressiveness of this data, and use interactivity to improve the
+        interpretability.
+    </p>
+    <p>We also included hover-over descriptions of the climate indicators and simulation scenarios to aid users in
+        understanding how their choices change the visualization by taking advantage of the interactive nature of the
+        visualization. We also included a pop-up instruction box to guide users through the different interactive
+        options available to choose between.
+    </p>
+    <hr style="border: 1px dashed #D3D3D3">
+    <p>Our process as a team involves lots of collaboration and communication. As a group, we prefer to work
+        synchronously and in-person, in long whole-day sessions. Design decisions are made as a team, and we will
+        iterate and discuss ideas, offering suggestions we consider together. When we are happy with a design or an
+        idea, we then move forward on implementing it together. Work was split based on available time commitment and
+        preference, and was focused on specific individual areas in order to avoid overlapping and merge conflicts in
+        our repository. For example, on web design, Jasmine focused on creating the CSS and visual design while Lina
+        handled most of the JavaScript and implementation. Everyone worked together on EDA during the checkpoint and
+        downloading the data using Python, with Jasmine and Irving creating the new data transformations for our plot’s
+        climate indicators. Given our group’s preference for long, synchronous, in-person work sessions, we estimate
+        that we’ve spent over a cumulative 70 person-hours developing our web app.
+    </p>
+    <p>We began by deciding which indicators we would want to create for our visualization. We relied on the Python
+        XArray library in order to download and transform our data, which was stored as large chunked multi-dimensional
+        arrays. Data often spanned nearly a century on large longitude-latitude grids. It was not uncommon for a single
+        simulation to include millions of data points. Understanding how to access this data and convert it into a
+        usable form for JavaScript represented our first large learning curve for this project.
+    </p>
+    <p>Web implementation was our other most time consuming process. All three team members were new to D3, and relied
+        on resources including chatbots and online documentation. Creating our Javascript code involved continual
+        iteration and improvement; gradual changes would be implemented and then tested for a round of bug fixes and
+        optimization, which was crucial given the size of our data.
+    </p>
 
 </body>
 
