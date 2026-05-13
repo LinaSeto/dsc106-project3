@@ -204,16 +204,9 @@ body {
 /* lock and play on year */
  .year-controls {
     display: flex;
-<<<<<<< Updated upstream
-    align-items: center;
-    gap: 5px;
-    margin: 5px;
-    padding: 7px 9px;
-=======
     align-items: left;
     margin: 0px ;
     padding: 0px;
->>>>>>> Stashed changes
     background: #edf0f2db;
     border-radius: 8px;
     width: 100%;             ;
@@ -234,14 +227,10 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-<<<<<<< Updated upstream
-
-=======
     margin: 0px; 
     gap: 4px ;
     color: rgb(81, 81, 81);
     
->>>>>>> Stashed changes
 }
 
 .control-btn:hover {
@@ -427,15 +416,8 @@ width: auto !important;;
     padding: 15px;
     background-color: #fff;
     display: flex;
-<<<<<<< Updated upstream
-    flex-direction: column;
-    gap: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    margin: 10px;
-=======
     flex-direction: column;                
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
->>>>>>> Stashed changes
 }
 
 /* Ensure the maps container allows the boxes to sit side-by-side */
@@ -490,7 +472,6 @@ width: auto !important;;
 
 /* 7e57c2
 26a69a */
-<<<<<<< Updated upstream
 .year-slider {
     flex-grow: 1;
     accent-color: #7e57c2
@@ -506,8 +487,6 @@ width: auto !important;;
     accent-color: #26a69a;
 }
 
-=======
->>>>>>> Stashed changes
 
 .ssp-select {
     max-width: fit-content;
@@ -534,13 +513,10 @@ width: auto !important;;
     margin-bottom: 0;
     background-color: rgba(250, 250, 250, 0.5);
     border: 1px solid #ccc;
-<<<<<<< Updated upstream
     border-radius: 6px;
     box-sizing: border-box;
-=======
     border-radius: 6x;
     box-sizing: border-box; 
->>>>>>> Stashed changes
     max-width: fit-content;
 }
 
@@ -566,13 +542,8 @@ width: auto !important;;
     padding: 16px;
     margin-top: 1px;
     background: white;
-<<<<<<< Updated upstream
-    border-radius: 8px;
-    border: 2px solid #919191;
-=======
     border: none;
     background-color: transparent;
->>>>>>> Stashed changes
 }
 
 #trend-chart svg {
@@ -581,14 +552,11 @@ width: auto !important;;
     display: block;
 }
 
-<<<<<<< Updated upstream
-=======
 #trend-chart:has(svg){
    padding: 16px;
    border: 2px solid #919191; 
    border-radius: 8px;}
 
->>>>>>> Stashed changes
 .factors {
     display: flex;
     flex-wrap: wrap;
@@ -608,38 +576,6 @@ width: auto !important;;
     font-size: 14px;
 }
 
-<<<<<<< Updated upstream
-
-/* for chrome  */
-.year-slider[data-side="left"] {
-    accent-color: #7e57c2;
-}
-
-.year-slider[data-side="right"] {
-    accent-color: #26a69a;
-}
-
-
-.year-slider[data-side="left"]::-webkit-slider-thumb {
-    background: #7e57c2;
-}
-
-.year-slider[data-side="right"]::-webkit-slider-thumb {
-    background: #26a69a;
-}
-
-/*  Firefox */
-.year-slider[data-side="left"]::-moz-range-thumb {
-    background: #7e57c2;
-}
-
-.year-slider[data-side="right"]::-moz-range-thumb {
-    background: #26a69a;
-}
-
-
-=======
->>>>>>> Stashed changes
 /* SAFARI */
 @supports (-webkit-hyphens:none) {
     .year-slider {
@@ -679,22 +615,39 @@ width: auto !important;;
     
 }
 
-<<<<<<< Updated upstream
+hr {
+    clear: both;
+    display: block;
+    width: 100%;
+    max-width: 0px;
+    margin: 2em auto;
+    border: 0;
+}
+
+
+
 /* writeup togglebox styling */
 details {
-    border: 2px solid black;
-    border-radius: 4px;
+    display: block !important;
+    border: 2px solid #919191;
+    border-radius: 8px;
     padding: 0.5em;
-    margin-top: 1em;
-    margin-bottom: 1em;
+    margin-left: auto !important; 
+    margin-right: auto !important;
+    box-sizing: border-box;
+    justify-content: center;
 }
 
 summary {
     font-weight: bold;
     margin: -0.5em -0.5em 0;
     padding: 0.5em;
+    text-align: center;
+    margin:auto;
+    display: list-item;          
+    list-style-position: inside;
+    cursor: pointer;
 }
-=======
 /* fro chrome  */
 .year-slider[data-side="left"] {
     accent-color: #7e57c2;
@@ -714,4 +667,3 @@ summary {
     background: #24978b;
 } 
 
->>>>>>> Stashed changes
